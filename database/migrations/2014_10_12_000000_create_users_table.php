@@ -15,6 +15,10 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             //$table->id();
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_general_ci';
+            $table->engine = 'InnoDB';
+
             $table->bigInteger('id')->autoIncrement();
 
             $table->string('name');

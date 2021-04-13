@@ -49,4 +49,10 @@ class User extends Authenticatable
             'user_id',
             'project_id');
     }
+
+    public function setAttributes($data)
+    {
+        $this->name = $data['name'];
+        $this->email = $data['email'];
+    }
 }

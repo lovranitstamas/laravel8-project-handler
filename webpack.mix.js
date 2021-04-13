@@ -12,10 +12,26 @@ const mix = require('laravel-mix');
  */
 
 
-mix.js('resources/js/app.js', 'public/js')
+/*mix.js('resources/js/app.js', 'public/js')
     .vue()
-    .sass('resources/sass/app.scss', 'public/css');
+    .sass('resources/sass/app.scss', 'public/css');*/
 
+
+mix.scripts([
+    'resources/js/app.js',
+], 'public/js/app.js')
+    .vue()
+
+//frontend
+mix.scripts([
+    "node_modules/jquery/dist/jquery.js",
+    "node_modules/sweetalert2/dist/sweetalert2.js",
+    'resources/js/scripts.js'
+], 'public/js/scripts.js')
+    .sass('resources/sass/app.scss', 'public/css')
+    .copy('node_modules/sweetalert2/dist/sweetalert2.css', 'public/css');
+
+//admin
 mix.scripts([
     'node_modules/admin-lte/plugins/jquery/jquery.js',
     'node_modules/admin-lte/plugins/bootstrap/js/bootstrap.js',

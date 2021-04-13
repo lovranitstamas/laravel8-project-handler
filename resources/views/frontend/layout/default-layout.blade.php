@@ -2,16 +2,17 @@
 
 @include('frontend.layout.head')
 
-<body>
+<body class="d-flex flex-column">
 
 @include('frontend.layout.menu')
 
-
-@yield('content')
-
+<div class="container flex-grow-1 py-5">
+    @yield('content')
+</div>
 
 @include('frontend.layout.footer')
 
 <script src="{{asset('js/app.js')}}"></script>
+<script src="{{asset('js/scripts.js')}}"></script>
 </body>
 </html>

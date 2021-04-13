@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\ContactPersonController;
+use App\Http\Controllers\DefaultController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +17,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
-});
+});*/
+
+Route::get('/', [DefaultController::class, 'index'])->name('index');
+Route::delete('/contact_person/{id}', [ContactPersonController::class, 'destroy'])
+    ->name('contact_person.destroyWithJson');
+Route::resource('contact_person', ContactPersonController::class);
+
 
 Route::namespace('Admin')->name('admin.')->prefix('admin')->group(function () {
     Route::namespace('Auth')->group(function () {
