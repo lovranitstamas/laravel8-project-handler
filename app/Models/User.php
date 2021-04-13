@@ -47,8 +47,6 @@ class User extends Authenticatable
             Project::class,
             'user_project',
             'user_id',
-            'project_id')
-            ->withTimestamps();
-        //->withPivot(['weight']);
+            'project_id');
     }
 }

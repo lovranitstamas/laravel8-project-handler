@@ -17,8 +17,6 @@ class Project extends Model
             User::class,
             'user_project',
             'project_id',
-            'user_id')
-            ->withTimestamps();
-        //->withPivot(['weight']);
+            'user_id');
     }
 }
