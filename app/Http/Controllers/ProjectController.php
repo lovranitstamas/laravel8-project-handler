@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Confirmation;
 use App\Models\Project;
 use App\Models\Status;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ProjectController extends Controller
 {
@@ -159,6 +161,7 @@ class ProjectController extends Controller
 
         try {
             $project = Project::findOrFail($id);
+            $oldProject = Project::findOrFail($id);
             $project->setAttributes($request->all());
 
             try {
@@ -169,6 +172,32 @@ class ProjectController extends Controller
 
                     $project->save();
                     $project->users()->sync($request->input('contact_persons'));
+                    $users = $project->users()->get()->pluck('email', 'name');
+
+                    $oldValues = [
+                        "name" => $oldProject->name,
+                        "description" => $oldProject->description,
+                        "status" => $oldProject->status->name
+                    ];
+
+                    $newValues = [
+                        "name" => $project->name,
+                        "description" => $project->description,
+                        "status" => $project->status->name
+                    ];
+
+                    if (array_diff($oldValues, $newValues)) {
+                        $diffProject = array_diff($oldValues, $newValues);
+
+                        foreach ($users as $email => $name) {
+                            $toEmail = $name;
+                            Mail::to($toEmail)
+                                ->send(
+                                    new Confirmation($email, $diffProject)
+                                );
+                        }
+                    }
+
                     session()->flash('success', 'Projekt módosítva');
 
                 } catch (\Exception $e) {

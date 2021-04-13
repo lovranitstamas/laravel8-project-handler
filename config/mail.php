@@ -2,6 +2,8 @@
 
 return [
 
+    'sender' => env('MAIL_SENDER', 'tamas198601@gmail.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Default Mailer
