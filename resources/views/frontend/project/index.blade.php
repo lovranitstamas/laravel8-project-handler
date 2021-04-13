@@ -20,39 +20,49 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive">
+                    <form action="{{route('project.index')}}" method="GET">
+                        <input type="text" class="form-control w-25"
+                               name="search[status][name]"
+                               value="{{request()->input('search.status.name')}}"
+                               placeholder="Státusz"><br>
+                        <input role="button" type="submit" class="btn btn-primary btn-sm" value="Keresés">
+                        <a role="button" class="btn btn-default" href="{{route('project.index')}}"
+                           title="Keresési feltételek törlése"><i class="fa fa-sync"></i></a>
+                    </form>
                     @include('frontend.layout.message')
                     <table class="table table-hover text-nowrap">
                         <thead>
                         <tr>
-                            <th>#</th>
+                            <!--<th>#</th>-->
                             <th>Név</th>
-                            <th>Leírás</th>
-                            <th>Állapot</th>
-                            <th>Kapcsolattartó(k)</th>
-<!--                            <th>Létrehozás dátuma</th>
-                            <th>Módosítás dátuma</th>-->
-                            <th>Megtekintés/Módosítás</th>
+                            <!--<th>Leírás</th>-->
+                            <th>Státusz</th>
+                            <th>Kapcsolattartók száma</th>
+                            <!--<th>Létrehozás dátuma</th>
+                                <th>Módosítás dátuma</th>-->
+                            <th>Szerkesztés</th>
                             <th>Törlés</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($projects as $project)
                             <tr id="project-{{$project->id}}">
-                                <td>{{$project->id}}</td>
+                                <!--<td>{{$project->id}}</td>-->
                                 <td>{{$project->name}}</td>
-                                <td>{{$project->description}}</td>
+                                <!--<td>{{$project->description}}</td>-->
                                 <td>{{$project->status->name}}</td>
                                 <td>
                                     @if(count($project->users()->pluck('name')->toArray())>0)
-                                    @foreach($project->users()->pluck('name')->toArray() as
-                                       $name)
-                                        {{$name}}<br>
-                                    @endforeach
+                                        {{--@foreach($project->users()->pluck('name')->toArray() as
+                                           $name)
+                                            {{$name}}<br>
+                                        @endforeach--}}
+                                        {{count($project->users()->pluck('name')->toArray())}}
                                     @else
                                         Nincs kapcsolattartó
                                     @endif
                                 </td>
-<!--                                <td>{{$project->created_at}}</td>
+                                <!--<td>{{$project->created_at}}</td>
                                 <td>{{$project->updated_at}}</td>-->
                                 <td>
                                     <div class="btn-group" role="group">
@@ -79,6 +89,7 @@
                         @endif
                         </tbody>
                     </table>
+                    {{$projects->links('pagination::bootstrap-4')}}
                 </div>
                 <!-- /.card-body -->
             </div>

@@ -14,9 +14,16 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Project::all();
+
+        $search = $request->input('search');
+        $search['sort_by'] = null;              //$request->input('orderBy');
+        $search['sorting_direction'] = null;    // = $request->input('orderDir');
+
+        //$projects = Project::paginate(2);
+        $projects = Project::search($search)->orderBy('name')->paginate(10);
+
         $numberOfStatutes = Status::count();
         $users = User::count();
 
