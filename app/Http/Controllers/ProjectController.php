@@ -16,8 +16,11 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::all();
+        $numberOfStatutes = Status::count();
 
-        return view('frontend.project.index')->with('projects', $projects);
+        return view('frontend.project.index')
+            ->with('projects', $projects)
+            ->with('numberOfStatutes', $numberOfStatutes);
     }
 
     /**

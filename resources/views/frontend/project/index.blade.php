@@ -8,9 +8,13 @@
                     <h3 class="card-title">Projektek</h3>
 
                     <div class="card-tools">
-                        <a href="{{route('project.create')}}" class="btn btn-primary">
-                            Projekt létrehozása
-                        </a>
+                        @if($numberOfStatutes>0)
+                            <a href="{{route('project.create')}}" class="btn btn-primary">
+                                Projekt létrehozása
+                            </a>
+                        @else
+                            <p>Projekt létrehozása nem lehetséges. Kérem töltse fel az adatázist státusszokkal.</p>
+                        @endif
                     </div>
                 </div>
                 <!-- /.card-header -->
