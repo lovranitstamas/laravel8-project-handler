@@ -10,6 +10,9 @@
                 <a class="nav-link" href="{{route('contact_person.index')}}">Kapcsolattartók</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="{{route('status.index')}}">Projekt státuszok</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{{route('project.index')}}">Projektek</a>
             </li>
         </ul>
