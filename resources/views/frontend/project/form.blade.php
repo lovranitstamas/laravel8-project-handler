@@ -66,6 +66,26 @@
             @endif
         </div>
 
+        <div class="form-group">
+            <label for="contact_persons" class="font-weight-bold">*Kapcsolattartó (több opció is választható):</label>
+            <select name="contact_persons[]" id="contact_persons" class="form-control" multiple>
+                @foreach($contactPersons as $contactPerson)
+                    <option value="{{$contactPerson->id}}"
+                        {{old('contact_persons')===null && $project->id && $project->hasUser($contactPerson->id) ?
+                        'selected':''}}
+                        {{old('contact_persons')!==null && (collect(old('contact_persons'))->contains($contactPerson->id)) ?
+                        'selected':''}}
+                    >{{$contactPerson->name}}
+                    </option>
+                @endforeach
+            </select>
+            @if($errors->first('contact_persons'))
+                <p style="color:red">
+                    {{$errors->first('contact_persons')}}
+                </p>
+            @endif
+        </div>
+
         @if($project->id)
             <div class="form-group">
                 <label for="created_at" class="font-weight-bold">Létrehozás dátuma:</label>

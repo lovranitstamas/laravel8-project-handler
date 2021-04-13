@@ -26,6 +26,12 @@ class Project extends Model
             User::class,
             'user_project',
             'project_id',
-            'user_id');
+            'user_id')
+            ->withTimestamps();
+    }
+
+    public function hasUser($userId)
+    {
+        return in_array($userId, $this->users()->pluck('id')->toArray());
     }
 }

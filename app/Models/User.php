@@ -47,7 +47,8 @@ class User extends Authenticatable
             Project::class,
             'user_project',
             'user_id',
-            'project_id');
+            'project_id')
+            ->withTimestamps();
     }
 
     public function setAttributes($data)

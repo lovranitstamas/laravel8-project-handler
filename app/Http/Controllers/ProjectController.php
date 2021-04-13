@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Status;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -17,10 +18,12 @@ class ProjectController extends Controller
     {
         $projects = Project::all();
         $numberOfStatutes = Status::count();
+        $users = User::count();
 
         return view('frontend.project.index')
             ->with('projects', $projects)
-            ->with('numberOfStatutes', $numberOfStatutes);
+            ->with('numberOfStatutes', $numberOfStatutes)
+            ->with('users', $users);
     }
 
     /**
@@ -33,11 +36,14 @@ class ProjectController extends Controller
 
         try {
             $project = new Project();
-            $statuses = Status::all();
+            $statuses = Status::orderBy('name')->get();
+            $contactPersons = User::orderBy('name')->get();
 
             return view('frontend.project.create')
                 ->with('project', $project)
-                ->with('statuses', $statuses);
+                ->with('statuses', $statuses)
+                ->with('contactPersons', $contactPersons);
+
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
         }
@@ -55,8 +61,9 @@ class ProjectController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|max:50|unique:projects,name',
-            'description' => 'required',
-            'status_id' => 'required|not_in:0'
+            'description' => 'required|min:10',
+            'status_id' => 'required|not_in:0',
+            'contact_persons' => 'required|array|min:1',
         ]);
 
         $project = new Project();
@@ -64,6 +71,8 @@ class ProjectController extends Controller
 
         try {
             $project->save();
+            $project->users()->attach($request->input('contact_persons'));
+
             session()->flash('success', 'Projekt elmentve');
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
@@ -83,11 +92,15 @@ class ProjectController extends Controller
         try {
 
             $project = Project::findOrFail($id);
-            $statutes = Status::all();
+            $statutes = Status::orderBy('name')->get();
+            $contactPersons = User::orderBy('name')->get();
+
 
             return view('frontend.project.show')
                 ->with('project', $project)
-                ->with('statuses', $statutes);
+                ->with('statuses', $statutes)
+                ->with('contactPersons', $contactPersons);
+
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
         }
@@ -104,12 +117,16 @@ class ProjectController extends Controller
     public function edit($id)
     {
         try {
+
             $project = Project::findOrFail($id);
-            $statuses = Status::all();
+            $statuses = Status::orderBy('name')->get();
+            $contactPersons = User::orderBy('name')->get();
 
             return view('frontend.project.edit')
                 ->with('project', $project)
-                ->with('statuses', $statuses);
+                ->with('statuses', $statuses)
+                ->with('contactPersons', $contactPersons);
+
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
         }
@@ -128,8 +145,9 @@ class ProjectController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|max:50|unique:projects,name,' . $id,
-            'description' => 'required',
-            'status_id' => 'required|not_in:0'
+            'description' => 'required|min:10',
+            'status_id' => 'required|not_in:0',
+            'contact_persons' => 'required|array|min:1'
         ]);
 
         try {
@@ -141,8 +159,11 @@ class ProjectController extends Controller
                 Status::findOrFail($request->input('status_id'));
 
                 try {
+
                     $project->save();
+                    $project->users()->sync($request->input('contact_persons'));
                     session()->flash('success', 'Projekt módosítva');
+
                 } catch (\Exception $e) {
                     session()->flash('error', $e->getMessage());
                 }
@@ -167,8 +188,11 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         try {
-            $contactPerson = Project::findOrFail($id);
-            $contactPerson->delete();
+
+            $project = Project::findOrFail($id);
+            $project->users()->detach();
+
+            $project->delete();
 
             return response()->json(['message' => 'A kapcsolattartó törölve']);
         } catch (\Exception $e) {

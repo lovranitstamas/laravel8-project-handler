@@ -8,12 +8,13 @@
                     <h3 class="card-title">Projektek</h3>
 
                     <div class="card-tools">
-                        @if($numberOfStatutes>0)
+                        @if($numberOfStatutes>0 && $users>0)
                             <a href="{{route('project.create')}}" class="btn btn-primary">
                                 Projekt létrehozása
                             </a>
                         @else
-                            <p>Projekt létrehozása nem lehetséges. Kérem töltse fel az adatázist státusszokkal.</p>
+                            <p>Projekt létrehozása nem lehetséges. Projekt státusz és/vagy kapcsolattartó nem
+                                található a rendszerben.</p>
                         @endif
                     </div>
                 </div>
@@ -27,8 +28,9 @@
                             <th>Név</th>
                             <th>Leírás</th>
                             <th>Állapot</th>
-                            <th>Létrehozás dátuma</th>
-                            <th>Módosítás dátuma</th>
+                            <th>Kapcsolattartó(k)</th>
+<!--                            <th>Létrehozás dátuma</th>
+                            <th>Módosítás dátuma</th>-->
                             <th>Megtekintés/Módosítás</th>
                             <th>Törlés</th>
                         </tr>
@@ -40,8 +42,18 @@
                                 <td>{{$project->name}}</td>
                                 <td>{{$project->description}}</td>
                                 <td>{{$project->status->name}}</td>
-                                <td>{{$project->created_at}}</td>
-                                <td>{{$project->updated_at}}</td>
+                                <td>
+                                    @if(count($project->users()->pluck('name')->toArray())>0)
+                                    @foreach($project->users()->pluck('name')->toArray() as
+                                       $name)
+                                        {{$name}}<br>
+                                    @endforeach
+                                    @else
+                                        Nincs kapcsolattartó
+                                    @endif
+                                </td>
+<!--                                <td>{{$project->created_at}}</td>
+                                <td>{{$project->updated_at}}</td>-->
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="{{route('project.show', $project->id)}}"
