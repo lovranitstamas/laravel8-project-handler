@@ -24,7 +24,9 @@ mix.scripts([
 
 //frontend
 mix.scripts([
+    "node_modules/popper.js/dist/umd/popper.js",
     "node_modules/jquery/dist/jquery.js",
+    "node_modules/bootstrap/dist/js/bootstrap.js",
     "node_modules/sweetalert2/dist/sweetalert2.js",
     'resources/js/scripts.js'
 ], 'public/js/scripts.js')
