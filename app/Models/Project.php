@@ -10,4 +10,15 @@ class Project extends Model
     {
         return $this->belongsTo(Status::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'user_project',
+            'project_id',
+            'user_id')
+            ->withTimestamps();
+        //->withPivot(['weight']);
+    }
 }
