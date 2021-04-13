@@ -9,7 +9,7 @@
 
                     <div class="card-tools">
                         <a href="{{route('contact_person.create')}}" class="btn btn-primary">
-                            Kapcsolattartó létrehozása
+                            Kapcsolattartó felvitele
                         </a>
                     </div>
                 </div>
