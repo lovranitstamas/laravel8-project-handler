@@ -12,7 +12,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <b>Projekt </b>kezelő
+        <b>Projektkezelő </b>admin
     </div>
     <!-- /.login-logo -->
     <div class="card">
