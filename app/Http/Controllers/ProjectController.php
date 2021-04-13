@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Project;
+use App\Models\Status;
 use Illuminate\Http\Request;
 
-class ContactPersonController extends Controller
+class ProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +15,9 @@ class ContactPersonController extends Controller
      */
     public function index()
     {
-        $contactPersons = User::all();
+        $projects = Project::all();
 
-        return view('frontend.contact_person.index')->with('contactPersons', $contactPersons);
+        return view('frontend.project.index')->with('projects', $projects);
     }
 
     /**
@@ -26,9 +27,19 @@ class ContactPersonController extends Controller
      */
     public function create()
     {
-        $contactPerson = new User();
 
-        return view('frontend.contact_person.create')->with('contactPerson', $contactPerson);
+        try {
+            $project = new Project();
+            $statuses = Status::all();
+
+            return view('frontend.project.create')
+                ->with('project', $project)
+                ->with('statuses', $statuses);
+        } catch (\Exception $e) {
+            session()->flash('error', $e->getMessage());
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -39,18 +50,18 @@ class ContactPersonController extends Controller
      */
     public function store(Request $request)
     {
-
         $this->validate($request, [
-            'name' => 'required|max:40',
-            'email' => 'required|email|max:30|unique:users,email',
+            'name' => 'required|max:50|unique:projects,name',
+            'description' => 'required',
+            'status_id' => 'required|not_in:0'
         ]);
 
-        $contactPerson = new User();
-        $contactPerson->setAttributes($request->all());
+        $project = new Project();
+        $project->setAttributes($request->all());
 
         try {
-            $contactPerson->save();
-            session()->flash('success', 'Kapcsolattarttó felvitele megtörtént');
+            $project->save();
+            session()->flash('success', 'Projekt elmentve');
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
         }
@@ -67,9 +78,13 @@ class ContactPersonController extends Controller
     public function show($id)
     {
         try {
-            $contactPerson = User::findOrFail($id);
 
-            return view('frontend.contact_person.show')->with('contactPerson', $contactPerson);
+            $project = Project::findOrFail($id);
+            $statutes = Status::all();
+
+            return view('frontend.project.show')
+                ->with('project', $project)
+                ->with('statuses', $statutes);
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
         }
@@ -86,8 +101,12 @@ class ContactPersonController extends Controller
     public function edit($id)
     {
         try {
-            $contactPerson = User::findOrFail($id);
-            return view('frontend.contact_person.edit')->with('contactPerson', $contactPerson);
+            $project = Project::findOrFail($id);
+            $statuses = Status::all();
+
+            return view('frontend.project.edit')
+                ->with('project', $project)
+                ->with('statuses', $statuses);
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
         }
@@ -105,17 +124,26 @@ class ContactPersonController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required|max:40',
-            'email' => 'required|email|max:30|unique:users,email,' . $id,
+            'name' => 'required|max:50|unique:projects,name,' . $id,
+            'description' => 'required',
+            'status_id' => 'required|not_in:0'
         ]);
 
         try {
-            $contactPerson = User::findOrFail($id);
-            $contactPerson->setAttributes($request->all());
+            $project = Project::findOrFail($id);
+            $project->setAttributes($request->all());
 
             try {
-                $contactPerson->save();
-                session()->flash('success', 'Kapcsolattartó módosítva');
+
+                Status::findOrFail($request->input('status_id'));
+
+                try {
+                    $project->save();
+                    session()->flash('success', 'Projekt módosítva');
+                } catch (\Exception $e) {
+                    session()->flash('error', $e->getMessage());
+                }
+
             } catch (\Exception $e) {
                 session()->flash('error', $e->getMessage());
             }
@@ -128,14 +156,15 @@ class ContactPersonController extends Controller
     }
 
     /**
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-
         try {
-            $contactPerson = User::findOrFail($id);
+            $contactPerson = Project::findOrFail($id);
             $contactPerson->delete();
 
             return response()->json(['message' => 'A kapcsolattartó törölve']);

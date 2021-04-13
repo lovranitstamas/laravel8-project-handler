@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\ContactPersonController;
 use App\Http\Controllers\DefaultController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,9 +24,11 @@ Route::get('/', function () {
 });*/
 
 Route::get('/', [DefaultController::class, 'index'])->name('index');
-Route::delete('/contact_person/{id}', [ContactPersonController::class, 'destroy'])
-    ->name('contact_person.destroyWithJson');
+Route::delete('/contact_person/{id}', [ContactPersonController::class, 'destroy'])->name('contact_person.destroyWithJson');
 Route::resource('contact_person', ContactPersonController::class);
+
+Route::delete('/project/{id}', [ProjectController::class, 'destroy'])->name('project.destroyWithJson');
+Route::resource('project', ProjectController::class);
 
 
 Route::namespace('Admin')->name('admin.')->prefix('admin')->group(function () {
