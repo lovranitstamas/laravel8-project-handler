@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Status;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -24,5 +25,26 @@ class DatabaseSeeder extends Seeder
         $user->updated_at = Carbon::now()->format('Y-m-d H:i:s');
 
         $user->save();
+
+        $status = new Status();
+        $status->name = "Fejlesztésre vár";
+        $status->created_at = Carbon::now()->format('Y-m-d H:i:s');
+        $status->updated_at = Carbon::now()->format('Y-m-d H:i:s');
+
+        $status->save();
+
+        $status = new Status();
+        $status->name = "Folyamatban";
+        $status->created_at = Carbon::now()->format('Y-m-d H:i:s');
+        $status->updated_at = Carbon::now()->format('Y-m-d H:i:s');
+
+        $status->save();
+
+        $status = new Status();
+        $status->name = "Kész";
+        $status->created_at = Carbon::now()->format('Y-m-d H:i:s');
+        $status->updated_at = Carbon::now()->format('Y-m-d H:i:s');
+
+        $status->save();
     }
 }
